@@ -1,0 +1,1 @@
+Permite adicionar e visualizar informações em arquivos (TXT ou XML) criados localmente na pasta padrão do usuário "My Documents" (Documentos).

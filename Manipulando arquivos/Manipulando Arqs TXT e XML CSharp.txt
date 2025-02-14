@@ -1,0 +1,376 @@
+using System;
+using System.Threading;
+using static System.Threading.Thread;
+using static System.Console;
+using System.Collections.Generic;
+using System.IO;
+using System.Xml.Serialization;
+using Microsoft.Win32;
+using System.Diagnostics.Metrics;
+
+namespace cadastroDePessoas
+{
+    public class Registro
+    {
+        public string Name { get; set; }
+        public DateTime dateTime { get; set; }
+        public string phone { get; set; }
+        public string Email { get; set; }
+    }
+
+    class Program
+    {
+
+        static string filenameTxt = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "ArquivoTxt.txt");
+        static string filenameXml = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "ArquivoXml.xml");
+        static void Main()
+        { bool temTXT = false, temXML= false;
+            do
+            {
+                FileInfo txt = new FileInfo(filenameTxt);
+                if (!File.Exists(filenameTxt))
+                {
+                    using (FileStream fs = txt.Create()) 
+                    { 
+
+                    }
+                }
+
+                FileInfo xml = new FileInfo(filenameXml);
+                if (!File.Exists(filenameXml))
+                {
+                    using (FileStream fs = xml.Create())
+                    {
+
+                    }
+                }
+
+                Clear();
+                janela(0, 0, 79, 24, 15, 9, 'd');
+
+                janela(1, 1, 78, 3, 9, 15, 'd');
+                SetCursorPosition(30, 2); Write("* * Menu Principal * *");
+
+                janela(1, 21, 78, 23, 9, 15, 'd');
+                SetCursorPosition(30, 22);
+
+                Write(" O que deseja? ");
+
+                janela(24, 9, 54, 15, 5, 15, 's');
+
+                SetCursorPosition(25, 10); Write("[1] Vizualizar o arquivo TXT");
+                SetCursorPosition(25, 11); Write("[2] Vizualizar o arquivo XML");
+                SetCursorPosition(25, 12); Write("[3] Adcionar Informações");
+                SetCursorPosition(25, 14); Write("[0] Sair");
+
+                SetCursorPosition(50, 22);
+                int opc = int.Parse(ReadLine());
+
+                switch (opc)
+                {
+                    case 1:
+                        Clear();
+                        ReadTxt(filenameTxt);
+                        WriteLine("<- Voltar [Enter]");
+                        ReadLine();
+                        continue;
+                    case 2:
+                        Clear();
+
+                        XmlSerializer serializer = new XmlSerializer(typeof(List<Registro>));
+                        List<Registro> registrosXml = new List<Registro>();
+
+                        if (File.Exists(filenameXml))
+                        {
+                            using (FileStream streamRead = new FileStream(filenameXml, FileMode.Open, FileAccess.Read, FileShare.Read))
+                            {
+                                if (streamRead.Length > 0) // Verifica se o arquivo não está vazio
+                                {
+                                    registrosXml = (List<Registro>)serializer.Deserialize(streamRead);
+                                }
+                            }
+                        }
+
+                        Console.WriteLine("+--------------------------------------+--------------------------------------+--------------------------------------+--------------------------------------+");
+                        Console.WriteLine("|                Nome                  |           Data Nascimento            |               Telefone               |                E-mail                |");
+                        Console.WriteLine("+--------------------------------------+--------------------------------------+--------------------------------------+--------------------------------------+");
+
+                        foreach (var registro in registrosXml)
+                        {
+                            Console.WriteLine($"| {registro.Name,-36} | {registro.dateTime,-36:dd/MM/yyyy} | {registro.phone,-36} | {registro.Email,-36} |");
+                            Console.WriteLine("+--------------------------------------+--------------------------------------+--------------------------------------+--------------------------------------+");
+                        }
+
+                        WriteLine("<- Voltar [Enter]");
+                        ReadLine();
+                        break;
+
+
+                    case 3:
+                        alterar();
+                        break;
+                    case 0:
+                        Environment.Exit(0);
+                        break;
+                    default:
+                        janela(23, 11, 58, 15, 15, 4, 's');//Janela Opções
+                        SetCursorPosition(24, 13); Write("ERRO! O número inserido é inválido"); //Texto Opções
+                        Thread.Sleep(2000);
+                        break;
+                }
+            } while (true);
+
+        }
+
+        static void alterar()
+        {
+            do
+            {
+                Clear();
+                janela(0, 0, 79, 24, 15, 9, 'd');
+
+                janela(1, 1, 78, 3, 9, 15, 'd');
+                SetCursorPosition(27, 2); Write("* * Adicionar Infrmações * *");
+
+                janela(1, 21, 78, 23, 9, 15, 'd');
+                SetCursorPosition(23, 22);
+
+                Write("Escolha o formato do arquivo: ");
+
+                janela(30, 9, 54, 15, 5, 15, 's');
+                SetCursorPosition(32, 10); Write("[1] TXT");
+                SetCursorPosition(32, 12); Write("[2] XML");
+                SetCursorPosition(32, 14); Write("[0] Voltar");
+
+                SetCursorPosition(55, 22);
+                int vEscolha = int.Parse(ReadLine());
+                if (vEscolha == 0)
+                {
+                    Main();
+                }
+
+                if (vEscolha != 1 && vEscolha != 2 && vEscolha != 0)
+                {
+                    janela(23, 11, 58, 15, 15, 4, 's');//Janela Opções
+                    SetCursorPosition(24, 13); Write("ERRO! O número inserido é inválido"); //Texto Opções
+                    Thread.Sleep(2000);
+                    alterar();
+                }
+
+                Console.Clear();
+
+                Console.Write("Digite seu nome: ");
+                string nome = Console.ReadLine();
+
+                Console.Write("Digite sua data de nascimento: ");
+                DateTime nascimento = DateTime.Parse(Console.ReadLine());
+
+                Console.Write("Digite seu telefone: ");
+                string telefone = Console.ReadLine();
+
+                Console.Write("Digite seu e-mail: ");
+                string email = Console.ReadLine();
+
+                List<Registro> registros = new List<Registro>
+                {
+                    new Registro
+                    {
+                        Name = nome,
+                        dateTime = nascimento,
+                        phone = telefone,
+                        Email = email
+                    },
+                };
+
+                Console.Clear();
+
+                switch (vEscolha)
+                {
+                    case 1:
+                        foreach (Registro registro in registros)
+                        {
+                            WriteTxt(registro, filenameTxt);
+                        }
+
+                        Console.WriteLine("Informações do Txt:");
+                        ReadTxt(filenameTxt);
+                        WriteLine("VOLTAR [<- Enter]");
+                        ReadLine();
+                        break;
+
+                    case 2:
+                        Console.WriteLine("Informações do Xml:");
+
+                        XmlSerializer serializer = new XmlSerializer(typeof(List<Registro>));
+                        List<Registro> registrosXml = new List<Registro>();
+
+                        if (File.Exists(filenameXml))
+                        {
+                            using (FileStream streamRead = new FileStream(filenameXml, FileMode.Open, FileAccess.Read, FileShare.Read))
+                            {
+                                if (streamRead.Length > 0) // Verifica se o arquivo não está vazio
+                                {
+                                    registrosXml = (List<Registro>)serializer.Deserialize(streamRead);
+                                }
+                            }
+                        }
+
+                        Console.WriteLine("+--------------------------------------+--------------------------------------+--------------------------------------+--------------------------------------+");
+                        Console.WriteLine("|                Nome                  |           Data Nascimento            |               Telefone               |                E-mail                |");
+                        Console.WriteLine("+--------------------------------------+--------------------------------------+--------------------------------------+--------------------------------------+");
+
+                        foreach (var registro in registrosXml)
+                        {
+                            Console.WriteLine($"| {registro.Name,-36} | {registro.dateTime,-36:dd/MM/yyyy} | {registro.phone,-36} | {registro.Email,-36} |");
+                            Console.WriteLine("+--------------------------------------+--------------------------------------+--------------------------------------+--------------------------------------+");
+                        }
+
+                        WriteLine("<- Voltar [Enter]");
+                        ReadLine();
+                        break;
+
+                    default:
+                        break;
+                }
+            } while (true);
+        }
+
+        static void janela(int c1, int l1, int c2, int l2, int corl, int corf, char borda)
+        {
+            // ║ -> 186 linha vertical (lv)
+            // ╗ -> 187 canto superior direito (csd)
+            // ╝ -> 188 canto inferior direito (cid)
+            // ╚ -> 200 canto inferior esquerdo (cie)
+            // ╔ -> 201 canto superior esquerdo (cse)
+            // ═ -> 205 linha horizontal (lh)
+            ForegroundColor = (ConsoleColor)corl;
+            BackgroundColor = (ConsoleColor)corf;
+            char lv = ' ', csd = ' ', cid = ' ', cie = ' ', cse = ' ', lh = ' ';
+
+            switch (borda)
+            {
+                case 'd':
+                    lv = '║';
+                    csd = '╗';
+                    cid = '╝';
+                    cie = '╚';
+                    cse = '╔';
+                    lh = '═';
+                    break;
+                case 's':
+                    lv = '│'; //179
+                    csd = '┐'; //191
+                    cid = '┘'; //217
+                    cie = '└'; //192
+                    cse = '┌'; //218
+                    lh = '─'; //196
+                    break;
+                default:
+                    break;
+            }
+
+            for (int x = l1; x <= l2; x++)
+            {
+                SetCursorPosition(c1, x); Write(lv);
+                SetCursorPosition(c2, x); Write(lv);
+            }
+            SetCursorPosition(c1, l1); Write(new string(lh, c2 - c1));
+            SetCursorPosition(c1, l2); Write(new string(lh, c2 - c1));
+            //
+            SetCursorPosition(c1, l1); Write(cse);
+            SetCursorPosition(c2, l1); Write(csd);
+            SetCursorPosition(c1, l2); Write(cie);
+            SetCursorPosition(c2, l2); Write(cid);
+            for (int x = l1 + 1; x < l2; x++)
+            {
+                SetCursorPosition(c1 + 1, x);
+                Write(new string(' ', c2 - c1 - 1));
+            }
+        }
+
+        public static void ClearFile(string filename)
+        {
+            using (FileStream fs = new FileStream(filename, FileMode.Create))
+            {
+                // O modo FileMode.Create irá truncar o arquivo, ou seja, apagar todo o conteúdo existente.
+            }
+        }
+
+        public static void WriteTxt(Registro registro, string filenameTxt)
+        {
+            // Usar ';' como delimitador para separar os campos
+            string[] infos = { $"{registro.Name};{registro.dateTime:dd/MM/yyyy};{registro.phone};{registro.Email}" };
+            File.AppendAllLines(filenameTxt, infos);
+        }
+
+        public static void ReadTxt(string filenameTxt)
+        {
+            Console.WriteLine("+--------------------------------------+--------------------------------------+--------------------------------------+--------------------------------------+");
+            Console.WriteLine("|                Nome                  |           Data Nascimento            |               Telefone               |                E-mail                |");
+            Console.WriteLine("+--------------------------------------+--------------------------------------+--------------------------------------+--------------------------------------+");
+
+            string[] lines = File.ReadAllLines(filenameTxt);
+
+            foreach (string line in lines)
+            {
+                // Dividir a linha usando ';' como delimitador
+                string[] dados = line.Split(';');
+                if (dados.Length == 4)
+                {
+                    Console.WriteLine($"| {dados[0],-36} | {dados[1],-36} | {dados[2],-36} | {dados[3],-36} | ");
+                    Console.WriteLine("+--------------------------------------+--------------------------------------+--------------------------------------+--------------------------------------+");
+                }
+                else
+                {
+                    Console.WriteLine("Linha inválida");
+                }
+            }
+
+        }
+
+        public static void WriteXml(List<Registro> novosRegistros, string filenameXml)
+        {
+            XmlSerializer serializer = new XmlSerializer(typeof(List<Registro>));
+            List<Registro> registrosExistentes = new List<Registro>();
+
+            // Se o arquivo XML existir, carregue os registros existentes
+            if (File.Exists(filenameXml))
+            {
+                using (FileStream streamRead = new FileStream(filenameXml, FileMode.Open, FileAccess.Read, FileShare.Read))
+                {
+                    if (streamRead.Length > 0) // Verifica se o arquivo não está vazio
+                    {
+                        registrosExistentes = (List<Registro>)serializer.Deserialize(streamRead);
+                    }
+                }
+            }
+
+            // Adicionar os novos registros aos existentes
+            registrosExistentes.AddRange(novosRegistros);
+
+            // Salvar todos os registros no arquivo XML
+            using (FileStream streamCreate = new FileStream(filenameXml, FileMode.Create, FileAccess.Write, FileShare.None))
+            {
+                serializer.Serialize(streamCreate, registrosExistentes);
+            }
+        }
+
+
+        public static List<Registro> ReadXml(string filenameXml)
+        {
+            XmlSerializer serializer = new XmlSerializer(typeof(List<Registro>));
+            List<Registro> registros = new List<Registro>();
+
+            if (File.Exists(filenameXml))
+            {
+                using (FileStream streamRead = new FileStream(filenameXml, FileMode.Open, FileAccess.Read, FileShare.Read))
+                {
+                    registros = (List<Registro>)serializer.Deserialize(streamRead);
+                }
+            }
+
+            return registros;
+        }
+
+    }
+}
