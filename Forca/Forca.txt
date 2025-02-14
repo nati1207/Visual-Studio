@@ -1,0 +1,1424 @@
+using System;
+using System.Threading;
+using static System.Threading.Thread;
+using static System.Console;
+using System.ComponentModel;
+namespace Projeto_janela
+{
+    class Program
+    {
+        static void Main()
+        {
+            do
+            {
+                int opc;
+                janela(0, 0, 79, 24, 15, 9, 'd');
+
+                janela(1, 1, 78, 3, 9, 15, 'd');
+                SetCursorPosition(30, 2); Write("* * Menu Principal * *");
+
+                janela(1, 21, 78, 23, 9, 15, 'd');
+                SetCursorPosition(30, 22);
+
+                Write("Digite sua opção: ");
+
+                janela(30, 9, 54, 15, 5, 15, 's');
+                SetCursorPosition(32, 11); Write("[1] Forca");
+                SetCursorPosition(32, 13); Write("[0] Sair");
+
+                SetCursorPosition(48, 22);
+                opc = int.Parse(ReadLine());
+                switch (opc)
+                {
+                    case 1:
+                        forca();
+                        break;
+
+                    case 0:
+                        Environment.Exit(0);
+                        break;
+                    default:
+                        janela(23, 11, 58, 15, 15, 4, 's');//Janela Opções
+                        SetCursorPosition(24, 13); Write("ERRO! O número inserido é inválido"); //Texto Opções
+                        Thread.Sleep(2000);
+                        break;
+                }
+            } while (true);
+        }//fecha main
+        static void janela(int c1, int l1, int c2, int l2, int corl, int corf, char borda)
+        {
+            // ║ -> 186 linha vertical (lv)
+            // ╗ -> 187 canto superior direito (csd)
+            // ╝ -> 188 canto inferior direito (cid)
+            // ╚ -> 200 canto inferior esquerdo (cie)
+            // ╔ -> 201 canto superior esquerdo (cse)
+            // ═ -> 205 linha horizontal (lh)
+            ForegroundColor = (ConsoleColor)corl;
+            BackgroundColor = (ConsoleColor)corf;
+            char lv = ' ', csd = ' ', cid = ' ', cie = ' ', cse = ' ', lh = ' ';
+
+            switch (borda)
+            {
+                case 'd':
+                    lv = '║';
+                    csd = '╗';
+                    cid = '╝';
+                    cie = '╚';
+                    cse = '╔';
+                    lh = '═';
+                    break;
+                case 's':
+                    lv = '│'; //179
+                    csd = '┐'; //191
+                    cid = '┘'; //217
+                    cie = '└'; //192
+                    cse = '┌'; //218
+                    lh = '─'; //196
+                    break;
+                default:
+                    break;
+            }
+
+            for (int x = l1; x <= l2; x++)
+            {
+                SetCursorPosition(c1, x); Write(lv);
+                SetCursorPosition(c2, x); Write(lv);
+            }
+            SetCursorPosition(c1, l1); Write(new string(lh, c2 - c1));
+            SetCursorPosition(c1, l2); Write(new string(lh, c2 - c1));
+            //
+            SetCursorPosition(c1, l1); Write(cse);
+            SetCursorPosition(c2, l1); Write(csd);
+            SetCursorPosition(c1, l2); Write(cie);
+            SetCursorPosition(c2, l2); Write(cid);
+            for (int x = l1 + 1; x < l2; x++)
+            {
+                SetCursorPosition(c1 + 1, x);
+                Write(new string(' ', c2 - c1 - 1));
+            }
+        }
+        
+        static void forca()
+        {
+            do
+            {
+                int opc;
+                janela(0, 0, 79, 24, 15, 9, 'd');
+
+                janela(1, 1, 78, 3, 9, 15, 'd');
+                SetCursorPosition(29, 2); Write("* * * * * FORCA * * * * *");
+
+                janela(1, 21, 78, 23, 9, 15, 'd');
+                SetCursorPosition(30, 22);
+                Write("Digite sua opção: ");
+
+                janela(30, 9, 54, 15, 5, 15, 's');
+                SetCursorPosition(32, 10); Write("[1] Contra a máquina");
+                SetCursorPosition(32, 12); Write("[2] Contra jogador");
+                SetCursorPosition(32, 14); Write("[0] Voltar");
+
+                SetCursorPosition(48, 22);
+                opc = int.Parse(ReadLine());
+
+                switch (opc)
+                {
+                    case 1:
+                        forcaMqn();
+                        break;
+                    case 2:
+                        forcaJog();
+                        break;
+
+                    case 0:
+                        Main();
+                        break;
+                    default:
+                        janela(23, 11, 58, 15, 15, 4, 's');//Janela Opções
+                        SetCursorPosition(24, 13); Write("ERRO! O número inserido é inválido"); //Texto Opções
+                        Thread.Sleep(2000);
+                        break;
+                }
+            } while (true);
+        }//fecha main
+        static void forcaMqn()
+        {
+            do
+            {
+                Console.Clear();
+                janela(0, 0, 79, 24, 15, 9, 'd');
+
+                janela(1, 1, 78, 3, 9, 15, 'd');
+
+                janela(1, 21, 78, 23, 9, 15, 'd');
+                SetCursorPosition(30, 22);
+
+                SetCursorPosition(29, 2); Write("* * * * * FORCA * * * * *");
+                ForegroundColor = ConsoleColor.White;
+                BackgroundColor = ConsoleColor.Blue;
+
+                string vLetra;
+                int i, linha = 6, coluna = 52, acertos = 0, erros = 0;
+                Random aleatorio = new Random();
+                int escolha = aleatorio.Next(0, 1);
+                string[] palavra = { "Homem de ferro" };
+                string[,] dicas = { { "Fruta ácida" }, { "Livros" }, { "Animal pré-histórico" }, { "Tromba" }, { "Relembrar momentos" }, { "Flor amarela" }, { "Classe animal" }, { "Titanic" }, { "Horizonte azul" }, { "Formação Geológica" } };
+                string palavraEscolhida = palavra[escolha];
+                int vTam = palavraEscolhida.Length, sla = 0;
+                palavraEscolhida = palavraEscolhida.ToLower();
+                string[] traco = new string[vTam];
+                string[] letrasDigitadas = new string[999];
+                bool achou;
+
+                SetCursorPosition(19, 8);
+                Write("│");
+                SetCursorPosition(19, 7);
+                Write("┐");
+                SetCursorPosition(18, 7);
+                Write("─");
+                SetCursorPosition(17, 7);
+                Write("─");
+                SetCursorPosition(16, 7);
+                Write("─");
+                SetCursorPosition(15, 7);
+                Write("─");
+                SetCursorPosition(14, 7);
+                Write("┌");
+                SetCursorPosition(14, 8);
+                Write("│");
+                SetCursorPosition(14, 9);
+                Write("│");
+                SetCursorPosition(14, 10);
+                Write("│");
+                SetCursorPosition(14, 11);
+                Write("│");
+                SetCursorPosition(14, 12);
+                Write("┴");
+                SetCursorPosition(13, 12);
+                Write("─");
+                SetCursorPosition(15, 12);
+                Write("─");
+
+                SetCursorPosition(53, 5);
+                Write("Letras digitadas: ");
+                SetCursorPosition(54, 14);
+                Write("Digite [1] para a dica:");
+                SetCursorPosition(30, 11);
+
+                for (i = 0; i < palavraEscolhida.Length; i++)
+                {
+                    if (palavraEscolhida[i] == ' ')
+                    {
+                        traco[i] = " ";
+                    }
+                    else
+                    {
+                        traco[i] = "_";
+                    }
+                    Write($" {traco[i]}");
+                }
+
+                do
+                {
+                    achou = false;
+
+                    janela(1, 21, 78, 23, 9, 15, 'd');
+                    SetCursorPosition(30, 22); Write("Digite uma letra:    ");
+                    SetCursorPosition(48, 22);
+                    string letraU = ReadLine();
+                    ForegroundColor = ConsoleColor.White;
+                    BackgroundColor = ConsoleColor.Blue;
+
+                    letraU = letraU.ToLower();
+
+                    if (letraU.Length > 1 && letraU != palavraEscolhida)
+                    {
+                        //janela(esquerda, cima, direita, baixo, cor da escrita, cor do fundo, 's');
+                        janela(1, 21, 78, 23, 15, 4, 'd'); //Janela Opções
+                        SetCursorPosition(24, 22); Write("  ERRO! Digite apenas UMA letra"); //Texto Opções
+                        Thread.Sleep(2000);
+                        ForegroundColor = ConsoleColor.White;
+                        BackgroundColor = ConsoleColor.Blue;
+                        continue;
+
+                    }
+
+                    if (letraU == "1")
+                    {
+                        SetCursorPosition(54, 15);
+                        Write($"- {dicas[escolha, 0]}");
+                        continue;
+                    }
+
+                    for (i = 0; i < vTam + 6; i++)
+                    {
+                        if (letrasDigitadas[i] == letraU)
+                        {
+                            achou = true;
+                            janela(1, 21, 78, 23, 6, 14, 'd'); //Janela Opções
+                            SetCursorPosition(23, 22); Write("ATENÇÃO! essa letra já foi digitada"); //Texto Opções
+                            Thread.Sleep(2000);
+                            ForegroundColor = ConsoleColor.White;
+                            BackgroundColor = ConsoleColor.Blue;
+                            break;
+                        }
+                    }
+                    if (achou == false)
+                    {
+                        letrasDigitadas[sla] = letraU;
+                        for (i = 0; i < vTam; i++)
+                        {
+                            string vPalavra = palavraEscolhida.Substring(i, 1);
+                            if (letraU == vPalavra)
+                            {
+                                SetCursorPosition(1, 14);
+                                Write($"acertos: {acertos += 1}");
+                                traco[i] = letraU;
+                                SetCursorPosition(30, 11);
+                                for (int j = 0; j < palavraEscolhida.Length; j++)
+                                {
+                                    Write($" {traco[j]}");
+                                }
+                            }
+                        }
+                        if (!palavraEscolhida.Contains(letraU))
+                        {
+                            SetCursorPosition(1, 15);
+                            Write($"erros: {erros += 1}");
+                        }
+
+                        int pontos = acertos - erros;
+                        if (pontos >= 0)
+                        {
+                            SetCursorPosition(1, 17);
+                            Write($"** Pontuação:  {pontos} **");
+                        }
+                        if (pontos < 0)
+                        {
+                            SetCursorPosition(1, 17);
+                            Write($"** Pontuação: {pontos} **");
+                        }
+
+                        SetCursorPosition(coluna, linha);
+                        Write($"{letraU},");
+                        coluna += 3;
+                        if (coluna > 73)
+                        {
+                            coluna = 52;
+                            linha = 7;
+
+                        }
+                    }
+                    sla++;
+                    switch (erros)
+                    {
+                        case 1:
+                            SetCursorPosition(19, 9); Write("0");
+                            break;
+
+                        case 2:
+                            SetCursorPosition(19, 10); Write("|");
+                            break;
+
+                        case 3:
+                            SetCursorPosition(18, 10); Write("/");
+                            break;
+
+                        case 4:
+                            SetCursorPosition(20, 10); Write(@"\");
+                            break;
+
+                        case 5:
+                            SetCursorPosition(20, 11); Write(@"\");
+                            break;
+
+                        case 6:
+                            SetCursorPosition(18, 11); Write(@"/");
+                            break;
+                    }
+
+                    if (palavraEscolhida == letraU)
+                    {
+                        int pontos = vTam;
+
+                        for (i = 0; i < vTam; i++)
+                        {
+                            string vPalavra = palavraEscolhida.Substring(i, 1);
+
+                            traco[i] = vPalavra;
+                            SetCursorPosition(30, 11);
+                            for (int j = 0; j < palavraEscolhida.Length; j++)
+                            {
+                                Write($" {traco[j]}");
+                            }
+
+                        }
+                        SetCursorPosition(1, 17);
+                        Write($"** Pontuação:  {pontos} **");
+
+
+                        for (int l = 0; l < 11; l++)
+                        {
+                            vLetra = "!!! WIN !!!".Substring(l, 1);
+                            for (int e = 59; e > l + 34; e--)
+                            {
+                                if (vLetra == " ")
+                                {
+                                    continue;
+                                }
+                                SetCursorPosition(e, 18);
+                                Write(vLetra + " ");
+                                Sleep(5);
+                            }
+                        }
+                        break;
+                    }
+
+                } while (acertos < vTam && erros < 6);
+                if (erros == 6)
+                {
+                    for (int l = 0; l < 17; l++)
+                    {
+                        vLetra = "!!! GAME OVER !!!".Substring(l, 1);
+                        for (int e = 56; e > l + 31; e--)
+                        {
+                            if (vLetra == " ")
+                            {
+                                continue;
+                            }
+                            SetCursorPosition(e, 18);
+                            Write(vLetra + " ");
+                            Sleep(5);
+                        }
+                    }
+                }
+                if (acertos == vTam)
+                {
+                    for (int l = 0; l < 11; l++)
+                    {
+                        vLetra = "!!! WIN !!!".Substring(l, 1);
+                        for (int e = 59; e > l + 34; e--)
+                        {
+                            if (vLetra == " ")
+                            {
+                                continue;
+                            }
+                            SetCursorPosition(e, 18);
+                            Write(vLetra + " ");
+                            Sleep(5);
+                        }
+                    }
+                }
+                janela(1, 21, 78, 23, 9, 15, 'd'); //Janela Input
+                SetCursorPosition(25, 22); Write("Deseja continuar? (S/N): "); //Texto Input
+                string vResp = ReadLine();
+                if (vResp.ToLower() == "n")
+                {
+                    return;
+                }
+            } while (true);
+        }
+        static void forcaJog()
+        {
+            do
+            {
+                string vResp;
+                string nomeJ1;
+                int pontosTotaisJ1 = 0, vitoriaJ1 = 0, contDicaJ1 = 0, pontosJ1;
+
+                string nomeJ2;
+                int pontosTotaisJ2 = 0, vitoriaJ2 = 0, contDicaJ2 = 0, pontosJ2;
+
+                int i, rounds = 0, roundsTot;
+
+                Clear();
+                janela(0, 0, 79, 24, 15, 9, 'd');
+
+                janela(1, 1, 78, 3, 9, 15, 'd');
+                SetCursorPosition(27, 2); Write("* * * * JOGADOR UM (1) * * * *");
+
+                janela(28, 9, 51, 15, 3, 15, 's');
+                SetCursorPosition(39, 10); Write("1");
+                SetCursorPosition(32, 12); Write("DIGITE SEU NOME");
+
+                janela(1, 21, 78, 23, 3, 15, 'd');
+                SetCursorPosition(28, 22); Write("* * * * * FORCA * * * * *");
+
+                SetCursorPosition(32, 14);
+                nomeJ1 = ReadLine();
+
+                ForegroundColor = ConsoleColor.White;
+                BackgroundColor = ConsoleColor.Blue;
+
+                Clear();
+                janela(0, 0, 79, 24, 15, 9, 'd');
+
+                janela(1, 1, 78, 3, 9, 15, 'd');
+                SetCursorPosition(26, 2); Write("* * * * JOGADOR DOIS (2) * * * *");
+
+                janela(28, 9, 51, 15, 3, 15, 's');
+                SetCursorPosition(39, 10); Write("2");
+                SetCursorPosition(32, 12); Write("DIGITE SEU NOME");
+
+                janela(1, 21, 78, 23, 3, 15, 'd');
+                SetCursorPosition(28, 22); Write("* * * * * FORCA * * * * *");
+
+                SetCursorPosition(32, 14);
+                nomeJ2 = ReadLine();
+
+                ForegroundColor = ConsoleColor.White;
+                BackgroundColor = ConsoleColor.Blue;
+
+                //Nome
+
+                Clear();
+                janela(0, 0, 79, 24, 15, 9, 'd');
+
+                janela(1, 1, 78, 3, 9, 15, 'd');
+                SetCursorPosition(29, 2); Write("* * * * * FORCA * * * * *");
+
+                janela(24, 9, 60, 15, 3, 15, 's');
+                SetCursorPosition(27, 12); Write("Quantas rodadas desejam jogar?");
+
+                janela(1, 21, 78, 23, 3, 15, 'd');
+                SetCursorPosition(28, 22); Write("* * * * * FORCA * * * * *");
+
+                SetCursorPosition(41, 14);
+                rounds = Int32.Parse(ReadLine());
+
+                ForegroundColor = ConsoleColor.White;
+                BackgroundColor = ConsoleColor.Blue;
+                roundsTot = 0;
+
+                //perguntas
+                do
+                {
+                    string dicaJ1, palavraJ1, letraJ1 = " "; //J1
+                    int acertosJ1 = 0, errosJ1 = 0, linha1 = 6, pos1 = 0, coluna1 = 52, contEspacoJ1 = 0;
+                    bool venceuJ1 = false, trocaJ1 = false;
+                    string[] letrasDigitadasJ1 = new string[999];
+
+                    string palavraJ2, dicaJ2, letraJ2 = " "; //J2
+                    int acertosJ2 = 0, errosJ2 = 0, linha2 = 6, pos2 = 0, coluna2 = 52, contEspacoJ2 = 0;
+                    bool venceuJ2 = false, perdeuJ2 = false, trocaJ2 = false;
+                    string[] letrasDigitadasJ2 = new string[999];
+
+                    string vLetra, espaco = " ";
+                    int sla = 0;
+                    bool achou;
+
+                    pontosJ1 = acertosJ1 - errosJ1;
+                    pontosJ2 = acertosJ2 - errosJ2;
+
+
+                    roundsTot++;
+
+                    Clear();
+                    janela(0, 0, 79, 24, 15, 9, 'd');
+
+                    janela(1, 1, 78, 3, 9, 15, 'd');
+                    SetCursorPosition(29, 2); Write($"* * * * * Round {roundsTot} * * * * *");
+
+                    janela(24, 8, 59, 17, 3, 15, 's');
+                    SetCursorPosition(36, 9); Write($"{nomeJ1}");
+                    SetCursorPosition(32, 11); Write($"Digite uma palavra: ");
+
+                    janela(1, 21, 78, 23, 3, 15, 'd');
+                    SetCursorPosition(28, 22); Write("* * * * * FORCA * * * * *");
+
+                    SetCursorPosition(36, 12);
+                    palavraJ2 = ReadLine();
+
+                    SetCursorPosition(32, 14); Write($"Digite uma dica: ");
+                    SetCursorPosition(36, 15);
+                    dicaJ2 = ReadLine();
+
+                    ForegroundColor = ConsoleColor.White;
+                    BackgroundColor = ConsoleColor.Blue;
+
+                    //J2
+                    Clear();
+                    janela(0, 0, 79, 24, 15, 9, 'd');
+
+                    janela(1, 1, 78, 3, 9, 15, 'd');
+                    SetCursorPosition(29, 2); Write($"* * * * * Round {roundsTot} * * * * *");
+
+                    janela(24, 8, 59, 17, 3, 15, 's');
+                    SetCursorPosition(36, 9); Write($"{nomeJ2}");
+                    SetCursorPosition(32, 11); Write($"Digite uma palavra: ");
+
+                    janela(1, 21, 78, 23, 3, 15, 'd');
+                    SetCursorPosition(28, 22); Write("* * * * * FORCA * * * * *");
+
+                    SetCursorPosition(36, 12);
+                    palavraJ1 = ReadLine();
+
+                    SetCursorPosition(32, 14); Write($"Digite uma dica: ");
+                    SetCursorPosition(36, 15);
+                    dicaJ1 = ReadLine();
+
+                    ForegroundColor = ConsoleColor.White;
+                    BackgroundColor = ConsoleColor.Blue;
+
+                    rounds--;
+
+                    int vTam1 = palavraJ1.Length;
+                    string[] traco1 = new string[vTam1];
+                    for (int k = 0; k < vTam1; k++)
+                    {
+                        traco1[k] = "_";
+                    }
+                    string[] verificaEspaco1 = new string[vTam1];
+                    for (i = 0; i < vTam1; i++)
+                    {
+                        verificaEspaco1[i] = palavraJ1.Substring(i, 1);
+                        string temEspaco = verificaEspaco1[i];
+                        if (temEspaco == " ")
+                        {
+                            contEspacoJ1++;
+                            traco1[i] = " ";
+                        }
+                    }
+
+                    int vTam2 = palavraJ2.Length;
+                    string[] traco2 = new string[vTam2];
+                    for (int j = 0; j < vTam2; j++)
+                    {
+                        traco2[j] = "_";
+                    }
+                    string[] verificaEspaco2 = new string[vTam2];
+                    for (i = 0; i < vTam2; i++)
+                    {
+                        verificaEspaco2[i] = palavraJ2.Substring(i, 1);
+                        string temEspaco = verificaEspaco2[i];
+                        if (temEspaco == " ")
+                        {
+                            contEspacoJ2++;
+                            traco2[i] = " ";
+                        }
+                    }
+
+
+                    do
+                    {  //J1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111
+                        do
+                        {
+                            if (venceuJ2 == true && perdeuJ2 && true)
+                            {
+                                break;
+                            }
+                            trocaJ1 = false;
+                            palavraJ1 = palavraJ1.ToLower();
+                            string[] soTraco = new string[vTam1];
+                            pontosJ1 = acertosJ1 - errosJ1 - contDicaJ1;
+
+                            Clear();
+                            janela(1, 1, 78, 3, 9, 15, 'd');
+                            SetCursorPosition(26, 2); Write($"* * * * * Vez de {nomeJ1} * * * * *");
+                            ForegroundColor = ConsoleColor.White;
+                            BackgroundColor = ConsoleColor.Blue;
+
+                            SetCursorPosition(19, 8);
+                            Write("│");
+                            SetCursorPosition(19, 7);
+                            Write("┐");
+                            SetCursorPosition(18, 7);
+                            Write("─");
+                            SetCursorPosition(17, 7);
+                            Write("─");
+                            SetCursorPosition(16, 7);
+                            Write("─");
+                            SetCursorPosition(15, 7);
+                            Write("─");
+                            SetCursorPosition(14, 7);
+                            Write("┌");
+                            SetCursorPosition(14, 8);
+                            Write("│");
+                            SetCursorPosition(14, 9);
+                            Write("│");
+                            SetCursorPosition(14, 10);
+                            Write("│");
+                            SetCursorPosition(14, 11);
+                            Write("│");
+                            SetCursorPosition(14, 12);
+                            Write("┴");
+                            SetCursorPosition(13, 12);
+                            Write("─");
+                            SetCursorPosition(15, 12);
+                            Write("─");
+
+                            switch (errosJ1)
+                            {
+                                case 1:
+                                    SetCursorPosition(19, 9); Write("0");
+                                    break;
+
+                                case 2:
+                                    SetCursorPosition(19, 9); Write("0");
+                                    SetCursorPosition(19, 10); Write("|");
+                                    break;
+
+                                case 3:
+                                    SetCursorPosition(19, 9); Write("0");
+                                    SetCursorPosition(19, 10); Write("|");
+                                    SetCursorPosition(18, 10); Write("/");
+                                    break;
+
+                                case 4:
+                                    SetCursorPosition(19, 9); Write("0");
+                                    SetCursorPosition(19, 10); Write("|");
+                                    SetCursorPosition(18, 10); Write("/");
+                                    SetCursorPosition(20, 10); Write(@"\");
+                                    break;
+
+                                case 5:
+                                    SetCursorPosition(19, 9); Write("0");
+                                    SetCursorPosition(19, 10); Write("|");
+                                    SetCursorPosition(18, 10); Write("/");
+                                    SetCursorPosition(20, 10); Write(@"\");
+                                    SetCursorPosition(20, 11); Write(@"\");
+                                    break;
+
+                                case 6:
+                                    SetCursorPosition(19, 9); Write("0");
+                                    SetCursorPosition(19, 10); Write("|");
+                                    SetCursorPosition(18, 10); Write("/");
+                                    SetCursorPosition(20, 10); Write(@"\");
+                                    SetCursorPosition(20, 11); Write(@"\");
+                                    SetCursorPosition(18, 11); Write(@"/");
+                                    break;
+                            }
+
+                            SetCursorPosition(53, 5);
+                            Write("Letras digitadas: ");
+
+                            SetCursorPosition(coluna1, linha1);
+                            for (i = 0; i < pos1; i++)
+                            {
+                                Write($"{letrasDigitadasJ1[i]}, ");
+                            }
+
+                            SetCursorPosition(54, 14);
+                            Write($"Digite [1] para a dica: ");
+                            if (contDicaJ1 > 0)
+                            {
+                                SetCursorPosition(1, 16);
+                                Write($"Você usou a dica -1 ponto.");
+                                SetCursorPosition(54, 15);
+                                Write(dicaJ1);
+                            }
+
+                            SetCursorPosition(1, 17);
+                            Write($"** Pontuação:  {pontosJ1} **");
+                            SetCursorPosition(1, 14);
+                            Write($"Acertos: {acertosJ1}");
+                            SetCursorPosition(1, 15);
+                            Write($"Erros: {errosJ1}");
+
+                            SetCursorPosition(30, 11);
+                            for (int k = 0; k < vTam1; k++)
+                            {
+                                Write($" {traco1[k]}");
+                            }
+
+                            if (pontosJ1 < 0)
+                            {
+                                SetCursorPosition(1, 17);
+                                Write($"** Pontuação: {pontosJ1} **");
+                            }
+
+                            do
+                            {
+                                achou = false;
+
+                                janela(1, 21, 78, 23, 9, 15, 'd');
+                                SetCursorPosition(30, 22);
+                                Write("Digite uma letra:    ");
+
+                                SetCursorPosition(48, 22);
+                                letraJ1 = ReadLine();
+
+                                ForegroundColor = ConsoleColor.White;
+                                BackgroundColor = ConsoleColor.Blue;
+
+                                letraJ1 = letraJ1.ToLower();
+
+                                if (letraJ1.Length > 1 && letraJ1 != palavraJ1)
+                                {
+                                    //janela(esquerda, cima, direita, baixo, cor da escrita, cor do fundo, 's');
+                                    janela(1, 21, 78, 23, 15, 4, 'd'); //Janela Opções
+                                    SetCursorPosition(24, 22); Write("  ERRO! Digite apenas UMA letra"); //Texto Opções
+                                    Thread.Sleep(2000);
+                                    ForegroundColor = ConsoleColor.White;
+                                    BackgroundColor = ConsoleColor.Blue;
+                                    continue;
+
+                                }
+
+                                if (letraJ1 == "1" && contDicaJ1 < 1)
+                                {
+                                    contDicaJ1++;
+                                    SetCursorPosition(54, 15);
+                                    Write($"{dicaJ1}");
+                                    pontosJ1 = acertosJ1 - errosJ1 - contDicaJ1;
+                                    SetCursorPosition(1, 16);
+                                    Write($"Você usou a dica -1 ponto.");
+                                    SetCursorPosition(1, 17);
+                                    Write($"** Pontuação:  {pontosJ1} **");
+                                    continue;
+                                }
+                                if (letraJ1 == "1")
+                                {
+                                    continue;
+                                }
+
+                                for (i = 0; i < vTam1 + 6; i++)
+                                {
+                                    if (letrasDigitadasJ1[i] == letraJ1 || letraJ1 == " ")
+                                    {
+                                        achou = true;
+                                        janela(1, 21, 78, 23, 6, 14, 'd'); //Janela Opções
+                                        SetCursorPosition(23, 22); Write("ATENÇÃO! essa letra já foi digitada"); //Texto Opções
+                                        Thread.Sleep(2000);
+                                        ForegroundColor = ConsoleColor.White;
+                                        BackgroundColor = ConsoleColor.Blue;
+                                        break;
+                                    }
+                                }
+                                if (achou == false)
+                                {
+                                    letrasDigitadasJ1[pos1] = letraJ1;
+
+                                    for (i = 0; i < palavraJ1.Length; i++)
+                                    {
+                                        string vPalavra = palavraJ1.Substring(i, 1);
+                                        if (letraJ1 == vPalavra)
+                                        {
+                                            acertosJ1++;
+                                            SetCursorPosition(1, 14);
+                                            Write($"Acertos: {acertosJ1}");
+                                            SetCursorPosition(1, 17);
+                                            pontosJ1 = acertosJ1 - errosJ1 - contDicaJ1;
+
+                                            Write($"** Pontuação:  {pontosJ1} **");
+                                            traco1[i] = letraJ1;
+
+                                            SetCursorPosition(30, 11);
+                                            for (int j = 0; j < palavraJ1.Length; j++)
+                                            {
+                                                Write($" {traco1[j]}");
+                                            }
+                                        }
+                                    }
+
+                                    pos1++;
+                                    SetCursorPosition(coluna1, linha1);
+                                    for (i = 0; i < pos1; i++)
+                                    {
+                                        Write($"{letrasDigitadasJ1[i]}, ");
+                                    }
+
+                                    if (!palavraJ1.Contains(letraJ1))
+                                    {
+                                        errosJ1 += 1;
+                                        trocaJ1 = true;
+                                        SetCursorPosition(1, 15);
+                                        Write($"Erros: {errosJ1}");
+                                        SetCursorPosition(1, 17);
+                                        pontosJ1 = acertosJ1 - errosJ1 - contDicaJ1;
+                                        Write($"** Pontuação:  {pontosJ1} **");
+
+                                        switch (errosJ1)
+                                        {
+                                            case 1:
+                                                SetCursorPosition(19, 9); Write("0");
+                                                break;
+
+                                            case 2:
+                                                SetCursorPosition(19, 9); Write("0");
+                                                SetCursorPosition(19, 10); Write("|");
+                                                break;
+
+                                            case 3:
+                                                SetCursorPosition(19, 9); Write("0");
+                                                SetCursorPosition(19, 10); Write("|");
+                                                SetCursorPosition(18, 10); Write("/");
+                                                break;
+
+                                            case 4:
+                                                SetCursorPosition(19, 9); Write("0");
+                                                SetCursorPosition(19, 10); Write("|");
+                                                SetCursorPosition(18, 10); Write("/");
+                                                SetCursorPosition(20, 10); Write(@"\");
+                                                break;
+
+                                            case 5:
+                                                SetCursorPosition(19, 9); Write("0");
+                                                SetCursorPosition(19, 10); Write("|");
+                                                SetCursorPosition(18, 10); Write("/");
+                                                SetCursorPosition(20, 10); Write(@"\");
+                                                SetCursorPosition(20, 11); Write(@"\");
+                                                break;
+
+                                            case 6:
+                                                SetCursorPosition(19, 9); Write("0");
+                                                SetCursorPosition(19, 10); Write("|");
+                                                SetCursorPosition(18, 10); Write("/");
+                                                SetCursorPosition(20, 10); Write(@"\");
+                                                SetCursorPosition(20, 11); Write(@"\");
+                                                SetCursorPosition(18, 11); Write(@"/");
+                                                break;
+                                        }
+                                        break;
+                                    }
+
+                                    if (pontosJ1 < 0)
+                                    {
+                                        SetCursorPosition(1, 17);
+                                        pontosJ1 = acertosJ1 - errosJ1 - contDicaJ1;
+                                        Write($"** Pontuação: {pontosJ1} **");
+                                    }
+                                }
+                                if (palavraJ1 == letraJ1)
+                                {
+                                    pontosJ1 = vTam1 - errosJ1 - contDicaJ1;
+                                    SetCursorPosition(1, 17);
+                                    Write($"** Pontuação: {pontosJ1} **");
+
+                                    for (i = 0; i < vTam1; i++)
+                                    {
+                                        string vPalavra = palavraJ1.Substring(i, 1);
+
+                                        traco1[i] = vPalavra;
+                                        SetCursorPosition(30, 11);
+                                        for (int j = 0; j < palavraJ1.Length; j++)
+                                        {
+                                            Write($" {traco1[j]}");
+                                        }
+
+                                    }
+
+                                    for (int l = 0; l < 11; l++)
+                                    {
+                                        vLetra = "!!! WIN !!!".Substring(l, 1);
+                                        for (int e = 59; e > l + 34; e--)
+                                        {
+                                            if (vLetra == " ")
+                                            {
+                                                continue;
+                                            }
+                                            SetCursorPosition(e, 18);
+                                            Write(vLetra + " ");
+                                            Sleep(5);
+                                        }
+                                    }
+                                    venceuJ1 = true;
+                                    trocaJ1 = true;
+                                    vitoriaJ1++;
+                                    break;
+                                }
+                            } while (acertosJ1 < vTam1 - contEspacoJ1 && errosJ1 < 6);
+
+                            if (errosJ1 == 6)
+                            {
+                                for (int l = 0; l < 17; l++)
+                                {
+                                    vLetra = "!!! GAME OVER !!!".Substring(l, 1);
+                                    for (int e = 56; e > l + 31; e--)
+                                    {
+                                        if (vLetra == " ")
+                                        {
+                                            continue;
+                                        }
+                                        SetCursorPosition(e, 18);
+                                        Write(vLetra + " ");
+                                        Sleep(5);
+                                    }
+                                }
+                                venceuJ1 = true;
+                                trocaJ1 = true;
+                                break;
+                            }
+                            if (acertosJ1 == vTam1 - contEspacoJ1)
+                            {
+                                for (int l = 0; l < 11; l++)
+                                {
+                                    vLetra = "!!! WIN !!!".Substring(l, 1);
+                                    for (int e = 59; e > l + 34; e--)
+                                    {
+                                        if (vLetra == " ")
+                                        {
+                                            continue;
+                                        }
+                                        SetCursorPosition(e, 18);
+                                        Write(vLetra + " ");
+                                        Sleep(5);
+                                    }
+                                }
+                                venceuJ1 = true;
+                                trocaJ1 = true;
+                                vitoriaJ1++;
+                                break;
+                            }
+                        } while (trocaJ1 == false);
+
+                        Sleep(1000);
+
+                        //J2222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
+                        do
+                        {
+                            if (venceuJ1 == true)
+                            {
+                                break;
+                            }
+                            trocaJ2 = false;
+                            Clear();
+                            palavraJ2 = palavraJ2.ToLower();
+                            Clear();
+
+                            Clear();
+                            janela(1, 1, 78, 3, 9, 15, 'd');
+                            SetCursorPosition(26, 2); Write($"* * * * * Vez de {nomeJ2} * * * * *");
+                            ForegroundColor = ConsoleColor.White;
+                            BackgroundColor = ConsoleColor.Blue;
+
+                            SetCursorPosition(19, 8);
+                            Write("│");
+                            SetCursorPosition(19, 7);
+                            Write("┐");
+                            SetCursorPosition(18, 7);
+                            Write("─");
+                            SetCursorPosition(17, 7);
+                            Write("─");
+                            SetCursorPosition(16, 7);
+                            Write("─");
+                            SetCursorPosition(15, 7);
+                            Write("─");
+                            SetCursorPosition(14, 7);
+                            Write("┌");
+                            SetCursorPosition(14, 8);
+                            Write("│");
+                            SetCursorPosition(14, 9);
+                            Write("│");
+                            SetCursorPosition(14, 10);
+                            Write("│");
+                            SetCursorPosition(14, 11);
+                            Write("│");
+                            SetCursorPosition(14, 12);
+                            Write("┴");
+                            SetCursorPosition(13, 12);
+                            Write("─");
+                            SetCursorPosition(15, 12);
+                            Write("─");
+
+                            switch (errosJ2)
+                            {
+                                case 1:
+                                    SetCursorPosition(19, 9); Write("0");
+                                    break;
+
+                                case 2:
+                                    SetCursorPosition(19, 9); Write("0");
+                                    SetCursorPosition(19, 10); Write("|");
+                                    break;
+
+                                case 3:
+                                    SetCursorPosition(19, 9); Write("0");
+                                    SetCursorPosition(19, 10); Write("|");
+                                    SetCursorPosition(18, 10); Write("/");
+                                    break;
+
+                                case 4:
+                                    SetCursorPosition(19, 9); Write("0");
+                                    SetCursorPosition(19, 10); Write("|");
+                                    SetCursorPosition(18, 10); Write("/");
+                                    SetCursorPosition(20, 10); Write(@"\");
+                                    break;
+
+                                case 5:
+                                    SetCursorPosition(19, 9); Write("0");
+                                    SetCursorPosition(19, 10); Write("|");
+                                    SetCursorPosition(18, 10); Write("/");
+                                    SetCursorPosition(20, 10); Write(@"\");
+                                    SetCursorPosition(20, 11); Write(@"\");
+                                    break;
+
+                                case 6:
+                                    SetCursorPosition(19, 9); Write("0");
+                                    SetCursorPosition(19, 10); Write("|");
+                                    SetCursorPosition(18, 10); Write("/");
+                                    SetCursorPosition(20, 10); Write(@"\");
+                                    SetCursorPosition(20, 11); Write(@"\");
+                                    SetCursorPosition(18, 11); Write(@"/");
+                                    break;
+                            }
+
+                            SetCursorPosition(53, 5);
+                            Write("Letras digitadas: ");
+
+                            SetCursorPosition(coluna1, linha1);
+                            for (i = 0; i < pos2; i++)
+                            {
+                                Write($"{letrasDigitadasJ2[i]}, ");
+                            }
+
+                            SetCursorPosition(54, 14);
+                            Write($"Digite [1] para a dica: ");
+                            if (contDicaJ2 > 0)
+                            {
+
+                                SetCursorPosition(1, 16);
+                                Write($"Você usou a dica -1 ponto.");
+                                SetCursorPosition(54, 15);
+                                Write(dicaJ2);
+                            }
+
+                            SetCursorPosition(1, 17);
+                            Write($"** Pontuação:  {pontosJ2} **");
+                            SetCursorPosition(1, 14);
+                            Write($"Acertos: {acertosJ2}");
+                            SetCursorPosition(1, 15);
+                            Write($"erros: {errosJ2}");
+
+                            SetCursorPosition(30, 11);
+
+                            for (int j = 0; j < palavraJ2.Length; j++)
+                            {
+                                Write($" {traco2[j]}");
+                            }
+
+
+                            do
+                            {
+                                achou = false;
+
+                                janela(1, 21, 78, 23, 9, 15, 'd');
+                                SetCursorPosition(30, 22); Write("Digite uma letra:    ");
+                                SetCursorPosition(48, 22);
+                                letraJ2 = ReadLine();
+                                ForegroundColor = ConsoleColor.White;
+                                BackgroundColor = ConsoleColor.Blue;
+
+                                letraJ2 = letraJ2.ToLower();
+
+                                if (letraJ2.Length > 1 && letraJ2 != palavraJ2)
+                                {
+                                    //janela(esquerda, cima, direita, baixo, cor da escrita, cor do fundo, 's');
+                                    janela(1, 21, 78, 23, 15, 4, 'd'); //Janela Opções
+                                    SetCursorPosition(24, 22); Write("  ERRO! Digite apenas UMA letra"); //Texto Opções
+                                    Thread.Sleep(2000);
+                                    ForegroundColor = ConsoleColor.White;
+                                    BackgroundColor = ConsoleColor.Blue;
+                                    continue;
+
+                                }
+                                if (letraJ2 == "1" && contDicaJ2 < 1)
+                                {
+                                    contDicaJ2++;
+                                    SetCursorPosition(54, 15);
+                                    Write($"{dicaJ2}");
+                                    pontosJ2 = acertosJ2 - errosJ2 - contDicaJ2;
+                                    SetCursorPosition(1, 16);
+                                    Write($"Você usou a dica -1 ponto.");
+                                    SetCursorPosition(1, 17);
+                                    Write($"** Pontuação:  {pontosJ2} **");
+                                    continue;
+                                }
+                                if (letraJ2 == "1")
+                                {
+                                    continue;
+                                }
+
+                                for (i = 0; i < vTam2 + 6; i++)
+                                {
+                                    if (letrasDigitadasJ2[i] == letraJ2 || letraJ2 == " ")
+                                    {
+                                        achou = true;
+                                        janela(1, 21, 78, 23, 6, 14, 'd'); //Janela Opções
+                                        SetCursorPosition(23, 22); Write("ATENÇÃO! essa letra já foi digitada"); //Texto Opções
+                                        Thread.Sleep(2000);
+                                        ForegroundColor = ConsoleColor.White;
+                                        BackgroundColor = ConsoleColor.Blue;
+                                        break;
+                                    }
+                                }
+                                if (achou == false)
+                                {
+                                    letrasDigitadasJ2[pos2] = letraJ2;
+                                    for (i = 0; i < vTam2; i++)
+                                    {
+                                        string vPalavra = palavraJ2.Substring(i, 1);
+                                        if (letraJ2 == vPalavra)
+                                        {
+                                            SetCursorPosition(1, 14);
+                                            Write($"Acertos: {acertosJ2 += 1}");
+                                            SetCursorPosition(1, 17);
+                                            pontosJ2 = acertosJ2 - errosJ2 - contDicaJ2;
+                                            Write($"** Pontuação:  {pontosJ2} **");
+                                            traco2[i] = letraJ2;
+                                            SetCursorPosition(30, 11);
+                                            for (int j = 0; j < palavraJ2.Length; j++)
+                                            {
+                                                Write($" {traco2[j]}");
+                                            }
+                                        }
+                                    }
+
+                                    pos2++;
+                                    SetCursorPosition(coluna2, linha2);
+                                    for (i = 0; i < pos2; i++)
+                                    {
+                                        Write($"{letrasDigitadasJ2[i]}, ");
+                                    }
+
+                                    if (!palavraJ2.Contains(letraJ2))
+                                    {
+                                        trocaJ2 = true;
+                                        SetCursorPosition(1, 15);
+                                        Write($"Erros: {errosJ2 += 1}");
+                                        SetCursorPosition(1, 17);
+                                        pontosJ2 = acertosJ2 - errosJ2 - contDicaJ2;
+                                        Write($"** Pontuação:  {pontosJ2} **");
+
+                                        switch (errosJ1)
+                                        {
+                                            case 1:
+                                                SetCursorPosition(19, 9); Write("0");
+                                                break;
+
+                                            case 2:
+                                                SetCursorPosition(19, 9); Write("0");
+                                                SetCursorPosition(19, 10); Write("|");
+                                                break;
+
+                                            case 3:
+                                                SetCursorPosition(19, 9); Write("0");
+                                                SetCursorPosition(19, 10); Write("|");
+                                                SetCursorPosition(18, 10); Write("/");
+                                                break;
+
+                                            case 4:
+                                                SetCursorPosition(19, 9); Write("0");
+                                                SetCursorPosition(19, 10); Write("|");
+                                                SetCursorPosition(18, 10); Write("/");
+                                                SetCursorPosition(20, 10); Write(@"\");
+                                                break;
+
+                                            case 5:
+                                                SetCursorPosition(19, 9); Write("0");
+                                                SetCursorPosition(19, 10); Write("|");
+                                                SetCursorPosition(18, 10); Write("/");
+                                                SetCursorPosition(20, 10); Write(@"\");
+                                                SetCursorPosition(20, 11); Write(@"\");
+                                                break;
+
+                                            case 6:
+                                                SetCursorPosition(19, 9); Write("0");
+                                                SetCursorPosition(19, 10); Write("|");
+                                                SetCursorPosition(18, 10); Write("/");
+                                                SetCursorPosition(20, 10); Write(@"\");
+                                                SetCursorPosition(20, 11); Write(@"\");
+                                                SetCursorPosition(18, 11); Write(@"/");
+                                                break;
+                                        }
+                                        break;
+                                    }
+
+                                    if (pontosJ2 < 0)
+                                    {
+                                        SetCursorPosition(1, 17);
+                                        pontosJ2 = acertosJ2 - errosJ2 - contDicaJ2;
+                                        Write($"** Pontuação: {pontosJ2} **");
+                                    }
+                                }
+                                sla++;
+                                if (palavraJ2 == letraJ2)
+                                {
+                                    pontosJ2 = vTam2 - errosJ2 - contDicaJ2;
+
+                                    for (i = 0; i < vTam2; i++)
+                                    {
+                                        string vPalavra = palavraJ2.Substring(i, 1);
+
+                                        traco2[i] = vPalavra;
+                                        SetCursorPosition(30, 11);
+                                        for (int j = 0; j < palavraJ2.Length; j++)
+                                        {
+                                            Write($" {traco2[j]}");
+                                        }
+
+                                    }
+
+                                    for (int l = 0; l < 11; l++)
+                                    {
+                                        vLetra = "!!! WIN !!!".Substring(l, 1);
+                                        for (int e = 59; e > l + 34; e--)
+                                        {
+                                            if (vLetra == " ")
+                                            {
+                                                continue;
+                                            }
+                                            SetCursorPosition(e, 18);
+                                            Write(vLetra + " ");
+                                            Sleep(5);
+                                        }
+                                    }
+                                    venceuJ2 = true;
+                                    trocaJ2 = true;
+                                    vitoriaJ2++;
+                                    break;
+                                }
+                            } while (acertosJ2 < vTam2 - contEspacoJ2 && errosJ2 < 6);
+
+                            if (errosJ2 == 6)
+                            {
+                                for (int l = 0; l < 17; l++)
+                                {
+                                    vLetra = "!!! GAME OVER !!!".Substring(l, 1);
+                                    for (int e = 56; e > l + 31; e--)
+                                    {
+                                        if (vLetra == " ")
+                                        {
+                                            continue;
+                                        }
+                                        SetCursorPosition(e, 18);
+                                        Write(vLetra + " ");
+                                        Sleep(5);
+                                    }
+                                }
+                                perdeuJ2 = true;
+                                trocaJ2 = true;
+                                break;
+                            }
+                            if (acertosJ2 == vTam2 - contEspacoJ2)
+                            {
+                                for (int l = 0; l < 11; l++)
+                                {
+                                    vLetra = "!!! WIN !!!".Substring(l, 1);
+                                    for (int e = 59; e > l + 34; e--)
+                                    {
+                                        if (vLetra == " ")
+                                        {
+                                            continue;
+                                        }
+                                        SetCursorPosition(e, 18);
+                                        Write(vLetra + " ");
+                                        Sleep(5);
+                                    }
+                                }
+                                venceuJ2 = true;
+                                trocaJ2 = true;
+                                vitoriaJ2++;
+                                break;
+                            }
+                        } while (trocaJ2 == false);
+                        Sleep(1000);
+                    } while (venceuJ1 == false && venceuJ2 == false && perdeuJ2 == false);
+
+                    Clear();
+                    pontosTotaisJ1 = pontosTotaisJ1 + pontosJ1;
+                    pontosTotaisJ2 = pontosTotaisJ2 + pontosJ2;
+
+                    janela(0, 0, 79, 24, 15, 9, 'd');
+
+                    janela(1, 1, 78, 3, 9, 15, 'd');
+                    SetCursorPosition(26, 2); Write($"* * * * * Fim do Round {roundsTot} * * * * *");
+
+                    janela(24, 7, 59, 18, 3, 15, 's');
+                    SetCursorPosition(32, 8); Write($"{nomeJ1}");
+                    SetCursorPosition(31, 10); Write($"A palavra era: {palavraJ1}");
+                    SetCursorPosition(32, 11); Write($"{nomeJ1} fez {pontosJ1} pontos!");
+
+                    SetCursorPosition(25, 12); Write($"==================================");
+
+                    SetCursorPosition(32, 13); Write($"{nomeJ2}");
+                    SetCursorPosition(31, 15); Write($"A palavra era: {palavraJ2}");
+                    SetCursorPosition(32, 16); Write($"{nomeJ2} fez {pontosJ2} pontos!");
+
+                    janela(1, 21, 78, 23, 3, 15, 'd');
+                    SetCursorPosition(28, 22); Write("Aperte ESPAÇO para pular");
+
+                    ConsoleKeyInfo pular = ReadKey();
+                    if (pular.Key == ConsoleKey.Spacebar)
+                    {
+                        continue;
+                    }
+
+                    ForegroundColor = ConsoleColor.White;
+                    BackgroundColor = ConsoleColor.Blue;
+                } while (rounds > 0);
+                do
+                {
+                    Clear();
+                    janela(0, 0, 79, 24, 15, 9, 'd');
+
+                    janela(1, 1, 78, 3, 9, 15, 'd');
+
+                    janela(24, 7, 59, 18, 3, 15, 's');
+
+                    if (vitoriaJ1 > vitoriaJ2)
+                    {
+                        SetCursorPosition(26, 2); Write($"* * * * * * {nomeJ1} VENCEU! * * * * * *");
+
+                        SetCursorPosition(32, 8); Write($"{nomeJ1}");
+                        SetCursorPosition(31, 10); Write($"Teve {vitoriaJ1} vitórias");
+                        SetCursorPosition(32, 11); Write($"E {pontosTotaisJ1} pontos");
+
+                        SetCursorPosition(25, 12); Write("==================================");
+
+                        SetCursorPosition(32, 14); Write($"{nomeJ2}");
+                        SetCursorPosition(31, 16); Write($"Teve {vitoriaJ2} vitórias");
+                        SetCursorPosition(32, 17); Write($"E {pontosTotaisJ2} pontos");
+                    }
+                    else if (vitoriaJ1 == vitoriaJ2)
+                    {
+                        SetCursorPosition(27, 2); Write($"* * * * * * EMPATE * * * * * *");
+
+                        SetCursorPosition(32, 8); Write($"{nomeJ1}");
+                        SetCursorPosition(31, 10); Write($"Teve {vitoriaJ1} vitórias");
+                        SetCursorPosition(32, 11); Write($"E {pontosTotaisJ1} pontos");
+
+                        SetCursorPosition(25, 12); Write($"===================================================");
+
+                        SetCursorPosition(32, 14); Write($"{nomeJ2}");
+                        SetCursorPosition(31, 16); Write($"Teve {vitoriaJ2} vitórias");
+                        SetCursorPosition(32, 17); Write($"E {pontosTotaisJ2} pontos");
+                    }
+                    else
+                    {
+                        SetCursorPosition(26, 2); Write($"* * * * * * {nomeJ2} VENCEU! * * * * * *");
+
+                        SetCursorPosition(32, 8); Write($"{nomeJ2}");
+                        SetCursorPosition(31, 10); Write($"Teve {vitoriaJ2} vitórias");
+                        SetCursorPosition(32, 11); Write($"E {pontosTotaisJ2} pontos");
+
+                        SetCursorPosition(25, 12); Write($"===================================================");
+
+                        SetCursorPosition(32, 14); Write($"{nomeJ1}");
+                        SetCursorPosition(31, 16); Write($"Teve {vitoriaJ1} vitórias");
+                        SetCursorPosition(32, 17); Write($"E {pontosTotaisJ1} pontos");
+                    }
+
+
+                    janela(1, 21, 78, 23, 9, 15, 'd'); //Janela Input
+                    SetCursorPosition(25, 22); Write("Deseja continuar? (S/N): "); //Texto Input
+                    vResp = ReadLine();
+                    if (vResp.ToLower() == "n")
+                    {
+                        return;
+                    }
+                    if (vResp.ToLower() == "s")
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        janela(23, 11, 58, 15, 15, 4, 's');//Janela Opções
+                        SetCursorPosition(24, 13); Write("ERRO! A letra inserida é inválida"); //Texto Opções
+                        Thread.Sleep(2000);
+                        continue;
+                    }
+                } while (vResp.ToLower() != "n" && vResp.ToLower() != "s");
+            } while (true);
+        }
+    }
+}
