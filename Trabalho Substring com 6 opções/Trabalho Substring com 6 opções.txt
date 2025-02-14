@@ -1,0 +1,580 @@
+using System;
+using System.Threading;
+using static System.Console;
+namespace Projeto_janela
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            do
+            {
+                int opc;
+                janela(0, 0, 79, 24, 15, 9, 'd');
+
+                janela(1, 1, 78, 3, 9, 15, 'd');
+                SetCursorPosition(30, 2); Write("* * Menu Principal * *");
+
+                janela(1, 21, 78, 23, 9, 15, 'd');
+                SetCursorPosition(30, 22);
+
+                Write("Digite sua opção: ");
+
+                janela(31, 8, 51, 17, 5, 15, 's');
+
+                SetCursorPosition(32, 9); Write("[1] Conta Letras");
+                SetCursorPosition(32, 10); Write("[2] Zenit Polar");
+                SetCursorPosition(32, 11); Write("[3] Letreiro");
+                SetCursorPosition(32, 12); Write("[4] Desliza letras");
+                SetCursorPosition(32, 13); Write("[5] Corrige Nomes");
+                SetCursorPosition(32, 14); Write("[6] Ordenação");
+                SetCursorPosition(32, 15); Write("[7] Sorteio");
+                SetCursorPosition(32, 16); Write("[0] Fim");
+
+                SetCursorPosition(48, 22);
+                opc = int.Parse(ReadLine());
+                switch (opc)
+                {
+                    case 1:
+                        contaLetra();
+                        break;
+                    case 2:
+                        zenitPolar();
+                        break;
+                    case 3:
+                        letreiro();
+                        break;
+                    case 4:
+                        desliza();
+                        break;
+
+                    case 5:
+                        corrigenomes();
+                        break;
+
+                    case 6:
+                        ordenacao();
+                        break;
+                    case 7:
+                        sorteio();
+                    break;
+
+                    case 0:
+                        Environment.Exit(0);
+                        break;
+                    default:
+                        janela(23, 11, 58, 15, 15, 4, 's');//Janela Opções
+                        SetCursorPosition(24, 13); Write("ERRO! O número inserido é inválido"); //Texto Opções
+                        Thread.Sleep(2000);
+                        break;
+                }
+            } while (true);
+        }//fecha main
+        static void janela(int c1, int l1, int c2, int l2, int corl, int corf, char borda)
+        {
+            // ║ -> 186 linha vertical (lv)
+            // ╗ -> 187 canto superior direito (csd)
+            // ╝ -> 188 canto inferior direito (cid)
+            // ╚ -> 200 canto inferior esquerdo (cie)
+            // ╔ -> 201 canto superior esquerdo (cse)
+            // ═ -> 205 linha horizontal (lh)
+            ForegroundColor = (ConsoleColor)corl;
+            BackgroundColor = (ConsoleColor)corf;
+            char lv = ' ', csd = ' ', cid = ' ', cie = ' ', cse = ' ', lh = ' ';
+
+            switch (borda)
+            {
+                case 'd':
+                    lv = '║';
+                    csd = '╗';
+                    cid = '╝';
+                    cie = '╚';
+                    cse = '╔';
+                    lh = '═';
+                    break;
+                case 's':
+                    lv = '│'; //179
+                    csd = '┐'; //191
+                    cid = '┘'; //217
+                    cie = '└'; //192
+                    cse = '┌'; //218
+                    lh = '─'; //196
+                    break;
+                default:
+                    break;
+            }
+
+            for (int x = l1; x <= l2; x++)
+            {
+                SetCursorPosition(c1, x); Write(lv);
+                SetCursorPosition(c2, x); Write(lv);
+            }
+            SetCursorPosition(c1, l1); Write(new string(lh, c2 - c1));
+            SetCursorPosition(c1, l2); Write(new string(lh, c2 - c1));
+            //
+            SetCursorPosition(c1, l1); Write(cse);
+            SetCursorPosition(c2, l1); Write(csd);
+            SetCursorPosition(c1, l2); Write(cie);
+            SetCursorPosition(c2, l2); Write(cid);
+            for (int x = l1 + 1; x < l2; x++)
+            {
+                SetCursorPosition(c1 + 1, x);
+                Write(new string(' ', c2 - c1 - 1));
+            }
+        }
+
+        static void zenitPolar()
+        {
+            do
+            {
+                Console.Clear();
+                janela(0, 0, 79, 24, 15, 9, 'd');
+
+                janela(1, 1, 78, 3, 9, 15, 'd');
+
+                janela(1, 21, 78, 23, 9, 15, 'd');
+                SetCursorPosition(30, 22);
+
+                SetCursorPosition(23, 2); Write("* * * * * ZENIT POLAR * * * * *");
+                SetCursorPosition(30, 22); Write("Digite uma frase: ");
+                ForegroundColor = ConsoleColor.DarkMagenta;
+                string vFrase;
+                string vFraseFinal = "";
+                string vLetra;
+                int vTam;
+                vFrase = ReadLine();
+                vTam = vFrase.Length;
+                ForegroundColor = ConsoleColor.White;
+                BackgroundColor = ConsoleColor.Blue;
+
+                for (int i = 0; i < vTam; i++)
+                {
+                    vLetra = vFrase.Substring(i, 1);
+                    switch (vLetra)
+                    {
+                        case "z":
+                            vFraseFinal += "p";
+                            break;
+                        case "e":
+                            vFraseFinal += "o";
+                            break;
+                        case "n":
+                            vFraseFinal += "l";
+                            break;
+                        case "i":
+                            vFraseFinal += "a";
+                            break;
+                        case "t":
+                            vFraseFinal += "r";
+                            break;
+
+                        case "p":
+                            vFraseFinal += "z";
+                            break;
+                        case "o":
+                            vFraseFinal += "e";
+                            break;
+                        case "l":
+                            vFraseFinal += "n";
+                            break;
+                        case "a":
+                            vFraseFinal += "i";
+                            break;
+                        case "r":
+                            vFraseFinal += "t";
+                            break;
+                        default:
+                            vFraseFinal += vLetra;
+                            break;
+                    }
+                }
+
+                janela(3, 6, 76, 18, 15, 9, 's');
+                SetCursorPosition(25, 12);
+                Write($"A frase criptografada é: {vFraseFinal}");
+                janela(1, 21, 78, 23, 9, 15, 'd'); //Janela Input
+                SetCursorPosition(25, 22); Write("Deseja continuar? (S/N): "); //Texto Input
+                string vResp = ReadLine();
+                if (vResp.ToLower() == "n")
+                {
+                    return;
+                }
+            } while (true);
+
+        }
+
+        static void contaLetra()
+        {
+            do
+            {
+                Console.Clear();
+                janela(0, 0, 79, 24, 15, 9, 'd');
+
+                janela(1, 1, 78, 3, 9, 15, 'd');
+
+                janela(1, 21, 78, 23, 9, 15, 'd');
+                SetCursorPosition(30, 22);
+
+                SetCursorPosition(23, 2); Write("* * * * * CONTA LETRAS * * * * *");
+                SetCursorPosition(30, 22); Write("Digite uma frase: ");
+                ForegroundColor = ConsoleColor.DarkMagenta;
+                string vFrase, vLetra;
+                int vTam, contA, contE, contI, contO, contU, contC, contS, contChar;
+                vFrase = ReadLine();
+                ForegroundColor = ConsoleColor.White;
+                BackgroundColor = ConsoleColor.Blue;
+
+                vTam = vFrase.Length;
+                contC = 0;
+                contA = 0;
+                contE = 0;
+                contI = 0;
+                contO = 0;
+                contU = 0;
+                contS = 0;
+                for (int i = 0; i < vTam; i++)
+                {
+
+                    vLetra = vFrase.Substring(i, 1);
+                    switch (vLetra.ToLower())
+                    {
+                        case "a":
+                            contA++;
+                            break;
+                        case "e":
+                            contE++;
+                            break;
+                        case "i":
+                            contI++;
+                            break;
+                        case "o":
+                            contO++;
+                            break;
+                        case "u":
+                            contU++;
+                            break;
+                        case " ":
+                            contS++;
+                            break;
+                        default:
+                            contC++;
+                            break;
+                    }
+                }
+                contChar = contC + contA + contE + contI + contO + contU;
+                janela(3, 5, 76, 18, 15, 9, 's');
+                SetCursorPosition(25, 8);
+                WriteLine($"A frase contém {contA} letra(s) 'a'.");
+                SetCursorPosition(25, 9);
+                WriteLine($"A frase contém {contE} letra(s) 'e'.");
+                SetCursorPosition(25, 10);
+                WriteLine($"A frase contém {contI} letra(s) 'i'.");
+                SetCursorPosition(25, 11);
+                WriteLine($"A frase contém {contO} letra(s) 'o'.");
+                SetCursorPosition(25, 12);
+                WriteLine($"A frase contém {contU} letra(s) 'u'.");
+                SetCursorPosition(25, 13);
+                WriteLine($"A frase contém {contC} Consoantes.");
+                SetCursorPosition(25, 14);
+                WriteLine($"A frase contém {contS} Espaços.");
+                SetCursorPosition(25, 15);
+                WriteLine($"A frase contém {contChar} Caracteres.");
+
+
+                janela(1, 21, 78, 23, 9, 15, 'd'); //Janela Input
+                SetCursorPosition(25, 22); Write("Deseja continuar? (S/N): "); //Texto Input
+                string vResp = ReadLine();
+                if (vResp.ToLower() == "n")
+                {
+                    return;
+                }
+            } while (true);
+        }
+        static void letreiro()
+        {
+            Console.Clear();
+            janela(0, 0, 79, 24, 15, 9, 'd');
+
+            janela(1, 1, 78, 3, 9, 15, 'd');
+
+            janela(1, 21, 78, 23, 9, 15, 'd');
+            SetCursorPosition(30, 22);
+
+            SetCursorPosition(27, 2); Write("* * * * * LETREIRO * * * * *");
+            SetCursorPosition(30, 22); Write("Digite uma frase: ");
+            ForegroundColor = ConsoleColor.DarkMagenta;
+            string vFrase;
+            int vTam;
+
+            vFrase = ReadLine();
+
+            Clear();
+
+            vTam = vFrase.Length * 2;
+            string espacos = new string(' ', vTam);
+            string vFraseEspaco = vFrase + espacos;
+
+            do
+            {
+                janela(0, 0, 79, 24, 15, 9, 'd');
+
+                janela(1, 1, 78, 3, 9, 15, 'd');
+
+                janela(1, 21, 78, 23, 9, 15, 'd');
+                SetCursorPosition(30, 22);
+
+                SetCursorPosition(27, 2); Write("* * * * * LETREIRO * * * * *");
+                SetCursorPosition(3, 22); Write("==========================================================================");
+
+                SetCursorPosition(25, 12);
+
+                ForegroundColor = ConsoleColor.White;
+                BackgroundColor = ConsoleColor.Blue;
+
+                SetCursorPosition(24, 12);
+                Write("[");
+
+                string texto = vFraseEspaco;
+                char primeiroChar = texto[0];
+                Write(texto);
+                vFraseEspaco = vFraseEspaco.Substring(1) + primeiroChar;
+                Write("]");
+                Thread.Sleep(150);
+
+            } while (true);
+        }
+        static void desliza()
+        {
+            do
+            {
+
+                Console.Clear();
+                janela(0, 0, 79, 24, 15, 9, 'd');
+
+                janela(1, 1, 78, 3, 9, 15, 'd');
+
+                janela(1, 21, 78, 23, 9, 15, 'd');
+                SetCursorPosition(30, 22);
+
+                SetCursorPosition(23, 2); Write("* * * * * Desliza Letras * * * * *");
+                SetCursorPosition(30, 22); Write("Digite uma frase: ");
+                ForegroundColor = ConsoleColor.DarkMagenta;
+                String vFrase;
+                int vTam;
+                vFrase = ReadLine();
+                ForegroundColor = ConsoleColor.White;
+                BackgroundColor = ConsoleColor.Blue;
+
+                vTam = vFrase.Length;
+                string vLetra;
+
+                for (int i = 0; i < vTam; i++)
+                {
+                    SetCursorPosition(75, 13);
+                    vLetra = vFrase.Substring(i, 1);
+                    Write(vLetra);
+                    for (int e = 75; e > i + 3; e--)
+                    {
+                        SetCursorPosition(e - 1, 13);
+                        Write(vLetra + " ");
+                        System.Threading.Thread.Sleep(30);
+                    }
+
+                }
+
+                janela(1, 21, 78, 23, 9, 15, 'd'); //Janela Input
+                SetCursorPosition(27, 22); Write("Deseja continuar? (S/N): "); //Texto Input
+                string vResp = ReadLine();
+                if (vResp.ToLower() == "n")
+                {
+                    return;
+                }
+            } while (true);
+        }
+        static void corrigenomes()
+        {
+            do
+            {
+                Console.Clear();
+                janela(0, 0, 79, 24, 15, 9, 'd');
+
+                janela(1, 1, 78, 3, 9, 15, 'd');
+
+                janela(1, 21, 78, 23, 9, 15, 'd');
+                SetCursorPosition(30, 22);
+
+                SetCursorPosition(23, 2); Write("* * * * * CORRIGE NOMES * * * * *");
+                SetCursorPosition(30, 22); Write("Informe um nome: ");
+
+
+                string vLetra, vPalavra;
+                int vTam, i = 0;
+                ForegroundColor = ConsoleColor.DarkMagenta;
+                string vFrase = ReadLine();
+                string[] palavra = vFrase.Split(' ');
+                vTam = palavra.Length;
+
+                ForegroundColor = ConsoleColor.White;
+                BackgroundColor = ConsoleColor.Blue;
+                SetCursorPosition(5, 12);
+                for (i = 0; i < vTam; i++)
+                {
+                    vPalavra = palavra[i];
+                    vPalavra = vPalavra.ToLower();
+                    if (vPalavra != "do" && vPalavra != "da" && vPalavra != "de" && vPalavra != "das" && vPalavra != "dos")
+                    {
+                        vLetra = vPalavra.Substring(0, 1);
+                        vLetra = vLetra.ToUpper();
+                        Write($"{(vLetra)}{(vPalavra.Substring(1))} ");
+                    }
+                    else
+                    {
+                        Write($"{vPalavra} ");
+                    }
+                }
+                janela(1, 21, 78, 23, 9, 15, 'd'); //Janela Input
+                SetCursorPosition(27, 22); Write("Deseja continuar? (S/N): "); //Texto Input
+                string vResp = ReadLine();
+                if (vResp.ToLower() == "n")
+                {
+                    return;
+                }
+            } while (true);
+        }
+
+        static void ordenacao()
+        {
+            do
+            {
+                Console.Clear();
+                janela(0, 0, 79, 24, 15, 9, 'd');
+
+                janela(1, 1, 78, 3, 9, 15, 'd');
+
+                janela(1, 21, 78, 23, 9, 15, 'd');
+                SetCursorPosition(30, 22);
+
+                SetCursorPosition(23, 2); Write("* * * * * ORDENA PPALAVRAS * * * * *");
+                SetCursorPosition(10, 22); Write("Digite palavras separadas por espaço: ");
+
+
+                int i, j, linha = 8;
+
+                string input = ReadLine();
+
+                string[] palavras = input.Split(' ');
+
+                for (i = 0; i < palavras.Length; i++)
+                {
+                    for (j = 0; j < palavras.Length; j++)
+                    {
+                        if (string.Compare(palavras[i], palavras[j], StringComparison.OrdinalIgnoreCase) < 0)
+                        {
+                            string temp = palavras[i];
+                            palavras[i] = palavras[j];
+                            palavras[j] = temp;
+                        }
+                    }
+                }
+
+                ForegroundColor = ConsoleColor.White;
+                BackgroundColor = ConsoleColor.Blue;
+                SetCursorPosition(5, 6);
+                WriteLine("Palavras ordenadas em ordem alfabetica: ");
+
+                foreach (string teste in palavras)
+                {
+                    SetCursorPosition(5, linha);
+                    Console.WriteLine(teste);
+                    linha++;
+                }
+                janela(1, 21, 78, 23, 9, 15, 'd'); //Janela Input
+                SetCursorPosition(27, 22); Write("Deseja continuar? (S/N): "); //Texto Input
+                string vResp = ReadLine();
+                if (vResp.ToLower() == "n")
+                {
+                    return;
+                }
+            } while (true);
+        }
+        static void sorteio()
+        {
+            do {
+                Console.Clear();
+                janela(0, 0, 79, 24, 15, 9, 'd');
+
+                janela(1, 1, 78, 3, 9, 15, 'd');
+
+                janela(1, 21, 78, 23, 9, 15, 'd');
+                SetCursorPosition(30, 22);
+
+                SetCursorPosition(26, 2); Write("* * * * * SORTEIO * * * * *");
+                SetCursorPosition(15, 22); Write("Informe quantas duplas voce deseja sortear: ");
+                int n, s, i, N, linha = 8;
+                bool achou;
+                n = int.Parse(ReadLine());
+                string[] nome = new string[n * 2];
+                string[,] dupla = new string[n, 2];
+                string[] sorteado = new string[n * 2];
+                string[] guardado = new string[n * 2];
+
+                Clear();
+                for (i = 0; i < n * 2; i++)
+                {
+                    janela(0, 0, 79, 24, 15, 9, 'd');
+
+                    janela(1, 1, 78, 3, 9, 15, 'd');
+
+                    janela(1, 21, 78, 23, 9, 15, 'd');
+                    SetCursorPosition(30, 22);
+
+                    SetCursorPosition(26, 2); Write("* * * * * SORTEIO * * * * *");
+                    SetCursorPosition(35, 22); Write((i + 1) + "º nome: ");
+                    nome[i] = ReadLine();
+                    Write("\r\n");
+                }
+                for (i = 0; i < n * 2; i++)
+                {
+                    achou = false;
+                    Random rnd = new Random();
+                    s = rnd.Next(0, n * 2);
+                    sorteado[i] = nome[s];
+                    for (int j = 0; j < n * 2; j++)
+                    {
+                        if (sorteado[i] == guardado[j])
+                        {
+                            achou = true;
+                            break;
+                        }
+                    }
+
+                    if (achou == false)
+                    {
+                        guardado[i] = sorteado[i];
+                    }
+                    else
+                    {
+                        i--;
+                    }
+                }
+                ForegroundColor = ConsoleColor.White;
+                BackgroundColor = ConsoleColor.Blue;
+                for (i = 0; i < n; i++)
+                {
+                    SetCursorPosition(5, linha);
+                    dupla[i, 0] = guardado[i];
+                    dupla[i, 1] = guardado[i + n];
+                    WriteLine($"A dupla sorteada foi {dupla[i, 0]} e {dupla[i, 1]}");
+                    linha++;
+                }
+                janela(1, 21, 78, 23, 9, 15, 'd'); //Janela Input
+                SetCursorPosition(27, 22); Write("Deseja continuar? (S/N): "); //Texto Input
+                string vResp = ReadLine();
+                if (vResp.ToLower() == "n")
+                {
+                    return;
+                }
+            } while (true);
+        }
+    }
+}
